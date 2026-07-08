@@ -1,10 +1,10 @@
-const CACHE_NAME = "gastos-app-v16";
+const CACHE_NAME = "gastos-app-v18";
 const ASSETS = [
   "./",
   "./index.html",
-  "./index.html?v=16",
-  "./styles.css?v=16",
-  "./app.js?v=16",
+  "./index.html?v=18",
+  "./styles.css?v=18",
+  "./app.js?v=18",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
@@ -35,7 +35,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=16").then((cached) => cached || caches.match("./index.html")))
+        .catch(() => caches.match("./index.html?v=18").then((cached) => cached || caches.match("./index.html")))
     );
     return;
   }
