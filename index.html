@@ -7,7 +7,7 @@
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=11" />
+    <link rel="stylesheet" href="styles.css?v=12" />
   </head>
   <body>
     <div id="splashScreen" class="splash-screen" aria-hidden="true">
@@ -131,6 +131,7 @@
         <button class="active" id="homeNavBtn" type="button">Inicio</button>
         <button id="movementsNavBtn" type="button">Movimientos</button>
         <button class="new-action" id="newNavBtn" type="button"><span>+</span>Nuevo</button>
+        <button id="summaryNavBtn" type="button">Resumen</button>
         <button id="moreNavBtn" type="button">Mas</button>
       </nav>
     </main>
@@ -177,6 +178,43 @@
       </form>
     </dialog>
 
+    <dialog id="summaryDialog">
+      <form method="dialog" class="settings-card">
+        <div class="section-title">
+          <h2>Resumen</h2>
+          <button class="icon-button" value="close" aria-label="Cerrar" title="Cerrar">Cerrar</button>
+        </div>
+        <div class="mini-summary">
+          <article>
+            <span>Ingresos</span>
+            <strong id="modalIncomeAmount">$0</strong>
+          </article>
+          <article>
+            <span>Egresos</span>
+            <strong id="modalExpenseAmount">$0</strong>
+          </article>
+          <article>
+            <span>Disponible</span>
+            <strong id="modalAvailableAmount">$0</strong>
+          </article>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="aboutDialog">
+      <form method="dialog" class="settings-card">
+        <div class="section-title">
+          <h2>Mas</h2>
+          <button class="icon-button" value="close" aria-label="Cerrar" title="Cerrar">Cerrar</button>
+        </div>
+        <div class="sync-box">
+          <strong>Sobre esta app</strong>
+          <p>Esta app te ayuda a registrar ingresos y egresos de forma simple, ver tu balance mensual y respaldar automaticamente tus movimientos en Google Sheets.</p>
+          <p>Los datos quedan guardados en tu celular y tambien se sincronizan con tu planilla cuando agregas o eliminas movimientos.</p>
+        </div>
+      </form>
+    </dialog>
+
     <template id="emptyTemplate">
       <div class="empty-state">
         <strong>Sin movimientos todavia</strong>
@@ -184,6 +222,6 @@
       </div>
     </template>
 
-    <script src="app.js?v=11"></script>
+    <script src="app.js?v=12"></script>
   </body>
 </html>

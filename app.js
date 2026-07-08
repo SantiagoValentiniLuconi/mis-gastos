@@ -68,7 +68,13 @@ const els = {
   homeNavBtn: $("homeNavBtn"),
   movementsNavBtn: $("movementsNavBtn"),
   newNavBtn: $("newNavBtn"),
+  summaryNavBtn: $("summaryNavBtn"),
   moreNavBtn: $("moreNavBtn"),
+  summaryDialog: $("summaryDialog"),
+  aboutDialog: $("aboutDialog"),
+  modalIncomeAmount: $("modalIncomeAmount"),
+  modalExpenseAmount: $("modalExpenseAmount"),
+  modalAvailableAmount: $("modalAvailableAmount"),
   newSection: $("newSection"),
   movementsSection: $("movementsSection"),
   saveSettings: $("saveSettingsBtn"),
@@ -226,6 +232,15 @@ function renderSummary() {
   els.expenseAmount.textContent = money(total.expense);
 }
 
+function currentMonthlyTotals() {
+  const total = totals(currentMonthTransactions());
+  return {
+    income: total.income,
+    expense: total.expense,
+    available: total.income - total.expense,
+  };
+}
+
 function renderChart() {
   const source = els.periodFilter.value === "month" ? currentMonthTransactions() : state.transactions;
   const expenses = source.filter((item) => item.type === "expense");
@@ -324,6 +339,18 @@ function openSettings() {
   els.sheetScriptUrlInput.value = state.settings.sheetScriptUrl || "";
   setSyncStatus("");
   els.settingsDialog.showModal();
+}
+
+function openSummaryDialog() {
+  const total = currentMonthlyTotals();
+  els.modalIncomeAmount.textContent = money(total.income);
+  els.modalExpenseAmount.textContent = money(total.expense);
+  els.modalAvailableAmount.textContent = money(total.available);
+  els.summaryDialog.showModal();
+}
+
+function openAboutDialog() {
+  els.aboutDialog.showModal();
 }
 
 function saveSettings() {
@@ -482,6 +509,12 @@ function setViewFilter(type) {
   if (type !== "all") scrollToElement(els.movementsSection);
 }
 
+function setBottomActive(activeButton) {
+  [els.homeNavBtn, els.movementsNavBtn, els.newNavBtn, els.summaryNavBtn, els.moreNavBtn].forEach((button) => {
+    button.classList.toggle("active", button === activeButton);
+  });
+}
+
 els.expenseTab.addEventListener("click", () => setActiveType("expense"));
 els.incomeTab.addEventListener("click", () => setActiveType("income"));
 els.summaryTab.addEventListener("click", () => setViewFilter("all"));
@@ -501,13 +534,29 @@ els.clearFilters.addEventListener("click", () => {
   renderTransactions();
 });
 els.settingsBtn.addEventListener("click", openSettings);
-els.homeNavBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-els.movementsNavBtn.addEventListener("click", () => scrollToElement(els.movementsSection));
+els.homeNavBtn.addEventListener("click", () => {
+  setBottomActive(els.homeNavBtn);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+els.movementsNavBtn.addEventListener("click", () => {
+  setBottomActive(els.movementsNavBtn);
+  els.typeFilter.value = "all";
+  renderTransactions();
+  scrollToElement(els.movementsSection);
+});
 els.newNavBtn.addEventListener("click", () => {
+  setBottomActive(els.newNavBtn);
   scrollToElement(els.newSection);
   window.setTimeout(() => els.amount.focus(), 350);
 });
-els.moreNavBtn.addEventListener("click", openSettings);
+els.summaryNavBtn.addEventListener("click", () => {
+  setBottomActive(els.summaryNavBtn);
+  openSummaryDialog();
+});
+els.moreNavBtn.addEventListener("click", () => {
+  setBottomActive(els.moreNavBtn);
+  openAboutDialog();
+});
 els.saveSettings.addEventListener("click", saveSettings);
 els.backupSheetsBtn.addEventListener("click", backupToSheets);
 els.restoreSheetsBtn.addEventListener("click", restoreFromSheets);
