@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0f172a" />
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=5" />
   </head>
   <body>
     <main class="app-shell">
@@ -130,8 +130,21 @@
           </select>
         </label>
         <div class="sync-box">
-          <strong>Sincronización gratis</strong>
-          <p>Por ahora tus datos quedan en este dispositivo. Podés exportarlos como respaldo e importarlos en otro celular.</p>
+          <strong>Google Sheets</strong>
+          <p>Guarda un respaldo en una planilla propia y recuperalo en otro dispositivo.</p>
+          <label>
+            <span>URL del script</span>
+            <input id="sheetScriptUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." />
+          </label>
+          <div class="button-row">
+            <button id="backupSheetsBtn" type="button">Respaldar</button>
+            <button id="restoreSheetsBtn" type="button">Restaurar</button>
+          </div>
+          <span id="syncStatus" class="sync-status"></span>
+        </div>
+        <div class="sync-box">
+          <strong>Archivo manual</strong>
+          <p>Tambien podes exportar un archivo de respaldo e importarlo en otro celular.</p>
           <div class="button-row">
             <button id="exportBtn" type="button">Exportar</button>
             <label class="import-button">
@@ -151,6 +164,6 @@
       </div>
     </template>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=5"></script>
   </body>
 </html>

@@ -22,6 +22,7 @@ const initialState = {
   settings: {
     budget: 0,
     currency: "ARS",
+    sheetScriptUrl: "",
   },
   activeType: "expense",
   transactions: [],
@@ -58,6 +59,10 @@ const els = {
   settingsDialog: $("settingsDialog"),
   budgetInput: $("budgetInput"),
   currencyInput: $("currencyInput"),
+  sheetScriptUrlInput: $("sheetScriptUrlInput"),
+  backupSheetsBtn: $("backupSheetsBtn"),
+  restoreSheetsBtn: $("restoreSheetsBtn"),
+  syncStatus: $("syncStatus"),
   saveSettings: $("saveSettingsBtn"),
   exportBtn: $("exportBtn"),
   importInput: $("importInput"),
@@ -279,12 +284,27 @@ function renderTransactions() {
           </div>
           <div class="transaction-side">
             <strong class="${item.type}">${sign}${money(item.amount)}</strong>
-            <span>${item.type === "income" ? "Ingreso" : "Egreso"}</span>
+            <div>
+              <span>${item.type === "income" ? "Ingreso" : "Egreso"}</span>
+              <button class="delete-button" type="button" data-delete-id="${item.id}" aria-label="Eliminar movimiento">Eliminar</button>
+            </div>
           </div>
         </article>
       `;
     })
     .join("");
+}
+
+function deleteTransaction(id) {
+  const item = state.transactions.find((transaction) => transaction.id === id);
+  if (!item) return;
+
+  const label = `${item.type === "income" ? "ingreso" : "egreso"} de ${money(item.amount)}`;
+  if (!confirm(`Eliminar este ${label}?`)) return;
+
+  state.transactions = state.transactions.filter((transaction) => transaction.id !== id);
+  saveState();
+  render();
 }
 
 function render() {
@@ -296,14 +316,102 @@ function render() {
 function openSettings() {
   els.budgetInput.value = state.settings.budget || "";
   els.currencyInput.value = state.settings.currency;
+  els.sheetScriptUrlInput.value = state.settings.sheetScriptUrl || "";
+  setSyncStatus("");
   els.settingsDialog.showModal();
 }
 
 function saveSettings() {
   state.settings.budget = Number(els.budgetInput.value) || 0;
   state.settings.currency = els.currencyInput.value;
+  state.settings.sheetScriptUrl = els.sheetScriptUrlInput.value.trim();
   saveState();
   render();
+}
+
+function setSyncStatus(message) {
+  els.syncStatus.textContent = message;
+}
+
+function currentScriptUrl() {
+  const url = els.sheetScriptUrlInput.value.trim();
+  state.settings.sheetScriptUrl = url;
+  saveState();
+  return url;
+}
+
+async function backupToSheets() {
+  const url = currentScriptUrl();
+  if (!url) {
+    setSyncStatus("Pega primero la URL del script.");
+    return;
+  }
+
+  setSyncStatus("Enviando respaldo...");
+  try {
+    await fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "backup", state }),
+    });
+    setSyncStatus("Respaldo enviado a Google Sheets.");
+  } catch {
+    setSyncStatus("No pude enviar el respaldo.");
+  }
+}
+
+function restoreFromSheets() {
+  const url = currentScriptUrl();
+  if (!url) {
+    setSyncStatus("Pega primero la URL del script.");
+    return;
+  }
+
+  setSyncStatus("Leyendo Google Sheets...");
+  const callbackName = `loadGastos_${Date.now()}`;
+  const script = document.createElement("script");
+  const separator = url.includes("?") ? "&" : "?";
+  const timeout = window.setTimeout(() => {
+    cleanup();
+    setSyncStatus("No pude leer el respaldo.");
+  }, 12000);
+
+  function cleanup() {
+    window.clearTimeout(timeout);
+    delete window[callbackName];
+    script.remove();
+  }
+
+  window[callbackName] = (data) => {
+    cleanup();
+    if (!data || !Array.isArray(data.transactions)) {
+      setSyncStatus("La planilla no tiene un respaldo valido.");
+      return;
+    }
+
+    state = {
+      ...initialState,
+      ...data,
+      settings: {
+        ...initialState.settings,
+        ...data.settings,
+        sheetScriptUrl: url,
+      },
+    };
+    saveState();
+    renderCategoryOptions();
+    setActiveType(state.activeType || "expense");
+    render();
+    setSyncStatus("Respaldo restaurado.");
+  };
+
+  script.onerror = () => {
+    cleanup();
+    setSyncStatus("No pude conectar con Google Sheets.");
+  };
+  script.src = `${url}${separator}action=load&callback=${callbackName}&t=${Date.now()}`;
+  document.body.appendChild(script);
 }
 
 function exportData() {
@@ -348,6 +456,10 @@ els.form.addEventListener("submit", addTransaction);
 els.periodFilter.addEventListener("change", renderChart);
 els.typeFilter.addEventListener("change", renderTransactions);
 els.categoryFilter.addEventListener("change", renderTransactions);
+els.transactionList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-delete-id]");
+  if (button) deleteTransaction(button.dataset.deleteId);
+});
 els.clearFilters.addEventListener("click", () => {
   els.typeFilter.value = "all";
   els.categoryFilter.value = "all";
@@ -355,6 +467,8 @@ els.clearFilters.addEventListener("click", () => {
 });
 els.settingsBtn.addEventListener("click", openSettings);
 els.saveSettings.addEventListener("click", saveSettings);
+els.backupSheetsBtn.addEventListener("click", backupToSheets);
+els.restoreSheetsBtn.addEventListener("click", restoreFromSheets);
 els.exportBtn.addEventListener("click", exportData);
 els.importInput.addEventListener("change", importData);
 
