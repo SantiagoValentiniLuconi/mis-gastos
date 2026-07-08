@@ -539,7 +539,7 @@ select:focus {
   width: min(calc(100% - 24px), 516px);
   min-height: 76px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -555,7 +555,7 @@ select:focus {
   display: grid;
   place-items: center;
   min-height: 64px;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 900;
   padding: 0 4px;
 }

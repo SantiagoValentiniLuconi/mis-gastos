@@ -68,8 +68,6 @@ const els = {
   homeNavBtn: $("homeNavBtn"),
   movementsNavBtn: $("movementsNavBtn"),
   newNavBtn: $("newNavBtn"),
-  summaryNavBtn: $("summaryNavBtn"),
-  moreNavBtn: $("moreNavBtn"),
   summaryDialog: $("summaryDialog"),
   aboutDialog: $("aboutDialog"),
   modalIncomeAmount: $("modalIncomeAmount"),
@@ -510,7 +508,7 @@ function setViewFilter(type) {
 }
 
 function setBottomActive(activeButton) {
-  [els.homeNavBtn, els.movementsNavBtn, els.newNavBtn, els.summaryNavBtn, els.moreNavBtn].forEach((button) => {
+  [els.homeNavBtn, els.movementsNavBtn, els.newNavBtn].forEach((button) => {
     button.classList.toggle("active", button === activeButton);
   });
 }
@@ -548,14 +546,6 @@ els.newNavBtn.addEventListener("click", () => {
   setBottomActive(els.newNavBtn);
   scrollToElement(els.newSection);
   window.setTimeout(() => els.amount.focus(), 350);
-});
-els.summaryNavBtn.addEventListener("click", () => {
-  setBottomActive(els.summaryNavBtn);
-  openSummaryDialog();
-});
-els.moreNavBtn.addEventListener("click", () => {
-  setBottomActive(els.moreNavBtn);
-  openAboutDialog();
 });
 els.saveSettings.addEventListener("click", saveSettings);
 els.backupSheetsBtn.addEventListener("click", backupToSheets);
