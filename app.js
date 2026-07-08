@@ -104,6 +104,32 @@ function money(value) {
   }).format(value || 0);
 }
 
+function parseAmount(value) {
+  const normalized = String(value)
+    .replace(/\s/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
+  return Number(normalized);
+}
+
+function formatAmountInput(value) {
+  const raw = String(value).replace(/[^\d,]/g, "");
+  const [integerPart, decimalPart] = raw.split(",");
+  const integer = integerPart.replace(/\D/g, "");
+  const formattedInteger = integer ? new Intl.NumberFormat("es-AR").format(Number(integer)) : "";
+  if (raw.includes(",")) return `${formattedInteger},${(decimalPart || "").replace(/\D/g, "").slice(0, 2)}`;
+  return formattedInteger;
+}
+
+function formatAmountField() {
+  const previousLength = els.amount.value.length;
+  els.amount.value = formatAmountInput(els.amount.value);
+  const nextLength = els.amount.value.length;
+  const position = els.amount.selectionStart || nextLength;
+  const nextPosition = Math.max(0, position + (nextLength - previousLength));
+  els.amount.setSelectionRange(nextPosition, nextPosition);
+}
+
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -185,7 +211,7 @@ function renderCategoryOptions() {
 
 function addTransaction(event) {
   event.preventDefault();
-  const amount = Number(els.amount.value);
+  const amount = parseAmount(els.amount.value);
   if (!amount || amount <= 0) return;
 
   const id = crypto.randomUUID();
@@ -515,6 +541,8 @@ function setBottomActive(activeButton) {
 
 els.expenseTab.addEventListener("click", () => setActiveType("expense"));
 els.incomeTab.addEventListener("click", () => setActiveType("income"));
+els.amount.addEventListener("input", formatAmountField);
+els.amount.addEventListener("focus", () => els.amount.select());
 els.summaryTab.addEventListener("click", () => setViewFilter("all"));
 els.incomeViewTab.addEventListener("click", () => setViewFilter("income"));
 els.expenseViewTab.addEventListener("click", () => setViewFilter("expense"));

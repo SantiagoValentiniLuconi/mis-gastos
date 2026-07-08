@@ -1,9 +1,9 @@
-const CACHE_NAME = "gastos-app-v13";
+const CACHE_NAME = "gastos-app-v14";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=13",
-  "./app.js?v=13",
+  "./styles.css?v=14",
+  "./app.js?v=14",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",

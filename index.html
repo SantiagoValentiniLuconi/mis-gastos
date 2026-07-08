@@ -7,7 +7,7 @@
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <div id="splashScreen" class="splash-screen" aria-hidden="true">
@@ -71,7 +71,7 @@
         <form id="transactionForm">
           <label class="amount-field">
             <span>Monto</span>
-            <input id="amountInput" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" required />
+            <input id="amountInput" type="text" inputmode="decimal" autocomplete="off" placeholder="0" required />
           </label>
 
           <div class="form-row">
@@ -220,6 +220,6 @@
       </div>
     </template>
 
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
   </body>
 </html>
