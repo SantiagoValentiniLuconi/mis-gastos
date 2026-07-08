@@ -191,6 +191,7 @@ function addTransaction(event) {
   setActiveType(state.activeType);
   saveState();
   render();
+  autoBackupToSheets("Movimiento guardado y respaldado.");
 }
 
 function totals(items) {
@@ -305,6 +306,7 @@ function deleteTransaction(id) {
   state.transactions = state.transactions.filter((transaction) => transaction.id !== id);
   saveState();
   render();
+  autoBackupToSheets("Movimiento eliminado y respaldo actualizado.");
 }
 
 function render() {
@@ -334,20 +336,28 @@ function setSyncStatus(message) {
 }
 
 function currentScriptUrl() {
-  const url = els.sheetScriptUrlInput.value.trim();
+  const url = els.sheetScriptUrlInput.value.trim() || state.settings.sheetScriptUrl || "";
   state.settings.sheetScriptUrl = url;
   saveState();
   return url;
 }
 
 async function backupToSheets() {
-  const url = currentScriptUrl();
+  await sendBackupToSheets({ silent: false, successMessage: "Respaldo enviado a Google Sheets." });
+}
+
+async function autoBackupToSheets(successMessage) {
+  await sendBackupToSheets({ silent: true, successMessage });
+}
+
+async function sendBackupToSheets({ silent, successMessage }) {
+  const url = silent ? state.settings.sheetScriptUrl : currentScriptUrl();
   if (!url) {
-    setSyncStatus("Pega primero la URL del script.");
+    if (!silent) setSyncStatus("Pega primero la URL del script.");
     return;
   }
 
-  setSyncStatus("Enviando respaldo...");
+  if (!silent) setSyncStatus("Enviando respaldo...");
   try {
     await fetch(url, {
       method: "POST",
@@ -355,9 +365,9 @@ async function backupToSheets() {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action: "backup", state }),
     });
-    setSyncStatus("Respaldo enviado a Google Sheets.");
+    if (els.settingsDialog.open || !silent) setSyncStatus(successMessage);
   } catch {
-    setSyncStatus("No pude enviar el respaldo.");
+    if (els.settingsDialog.open || !silent) setSyncStatus("No pude enviar el respaldo.");
   }
 }
 
