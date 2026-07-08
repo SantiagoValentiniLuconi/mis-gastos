@@ -1,4 +1,6 @@
 const STORAGE_KEY = "gastos-app-v1";
+const DEFAULT_SHEET_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycby1yFwF_ss16iz8zRNpw5M7QoraHVM-mgyVF9aFRGTnSI8W9uJO_OWKzU7bS-tvUZO8/exec";
 
 const expenseCategories = [
   { name: "Comida", color: "#0f766e" },
@@ -22,7 +24,7 @@ const initialState = {
   settings: {
     budget: 0,
     currency: "ARS",
-    sheetScriptUrl: "",
+    sheetScriptUrl: DEFAULT_SHEET_SCRIPT_URL,
   },
   activeType: "expense",
   transactions: [],
@@ -72,7 +74,9 @@ const els = {
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return saved ? { ...initialState, ...saved, settings: { ...initialState.settings, ...saved.settings } } : initialState;
+    const loaded = saved ? { ...initialState, ...saved, settings: { ...initialState.settings, ...saved.settings } } : initialState;
+    if (!loaded.settings.sheetScriptUrl) loaded.settings.sheetScriptUrl = DEFAULT_SHEET_SCRIPT_URL;
+    return loaded;
   } catch {
     return initialState;
   }
@@ -336,7 +340,7 @@ function setSyncStatus(message) {
 }
 
 function currentScriptUrl() {
-  const url = els.sheetScriptUrlInput.value.trim() || state.settings.sheetScriptUrl || "";
+  const url = els.sheetScriptUrlInput.value.trim() || state.settings.sheetScriptUrl || DEFAULT_SHEET_SCRIPT_URL;
   state.settings.sheetScriptUrl = url;
   saveState();
   return url;
@@ -351,7 +355,7 @@ async function autoBackupToSheets(successMessage) {
 }
 
 async function sendBackupToSheets({ silent, successMessage }) {
-  const url = silent ? state.settings.sheetScriptUrl : currentScriptUrl();
+  const url = silent ? state.settings.sheetScriptUrl || DEFAULT_SHEET_SCRIPT_URL : currentScriptUrl();
   if (!url) {
     if (!silent) setSyncStatus("Pega primero la URL del script.");
     return;
