@@ -1,12 +1,14 @@
-const CACHE_NAME = "gastos-app-v8";
+const CACHE_NAME = "gastos-app-v10";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=7",
-  "./app.js?v=7",
+  "./styles.css?v=10",
+  "./app.js?v=10",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
+  "./brand-logo.jpg",
+  "./splash-screen.jpg",
 ];
 
 self.addEventListener("install", (event) => {

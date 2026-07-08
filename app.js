@@ -40,9 +40,7 @@ const els = {
   availableAmount: $("availableAmount"),
   incomeAmount: $("incomeAmount"),
   expenseAmount: $("expenseAmount"),
-  budgetAmount: $("budgetAmount"),
-  budgetProgress: $("budgetProgress"),
-  budgetStatus: $("budgetStatus"),
+  splashScreen: $("splashScreen"),
   expenseTab: $("expenseTab"),
   incomeTab: $("incomeTab"),
   form: $("transactionForm"),
@@ -59,7 +57,6 @@ const els = {
   clearFilters: $("clearFiltersBtn"),
   settingsBtn: $("settingsBtn"),
   settingsDialog: $("settingsDialog"),
-  budgetInput: $("budgetInput"),
   currencyInput: $("currencyInput"),
   sheetScriptUrlInput: $("sheetScriptUrlInput"),
   backupSheetsBtn: $("backupSheetsBtn"),
@@ -212,18 +209,12 @@ function renderSummary() {
   const monthItems = currentMonthTransactions();
   const total = totals(monthItems);
   const available = total.income - total.expense;
-  const budget = Number(state.settings.budget) || 0;
-  const used = budget > 0 ? Math.min((total.expense / budget) * 100, 100) : 0;
   const monthName = new Intl.DateTimeFormat("es-AR", { month: "long", year: "numeric" }).format(new Date());
 
   els.monthTitle.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
   els.availableAmount.textContent = money(available);
   els.incomeAmount.textContent = money(total.income);
   els.expenseAmount.textContent = money(total.expense);
-  els.budgetAmount.textContent = budget ? money(budget) : "Sin definir";
-  els.budgetProgress.style.width = `${used}%`;
-  els.budgetProgress.style.background = used > 85 ? "var(--expense)" : used > 65 ? "var(--warning)" : "var(--accent)";
-  els.budgetStatus.textContent = budget ? `${Math.round(used)}% usado` : "Definilo en ajustes";
 }
 
 function renderChart() {
@@ -320,7 +311,6 @@ function render() {
 }
 
 function openSettings() {
-  els.budgetInput.value = state.settings.budget || "";
   els.currencyInput.value = state.settings.currency;
   els.sheetScriptUrlInput.value = state.settings.sheetScriptUrl || "";
   setSyncStatus("");
@@ -328,7 +318,6 @@ function openSettings() {
 }
 
 function saveSettings() {
-  state.settings.budget = Number(els.budgetInput.value) || 0;
   state.settings.currency = els.currencyInput.value;
   state.settings.sheetScriptUrl = els.sheetScriptUrlInput.value.trim();
   saveState();
@@ -464,6 +453,12 @@ function registerServiceWorker() {
   }
 }
 
+function hideSplash() {
+  window.setTimeout(() => {
+    els.splashScreen?.classList.add("hidden");
+  }, 2200);
+}
+
 els.expenseTab.addEventListener("click", () => setActiveType("expense"));
 els.incomeTab.addEventListener("click", () => setActiveType("income"));
 els.form.addEventListener("submit", addTransaction);
@@ -490,4 +485,5 @@ els.date.value = todayISO();
 renderCategoryOptions();
 setActiveType(state.activeType || "expense");
 render();
+hideSplash();
 registerServiceWorker();

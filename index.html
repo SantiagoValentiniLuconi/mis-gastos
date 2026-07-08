@@ -3,55 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#007a55" />
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=7" />
+    <link rel="stylesheet" href="styles.css?v=10" />
   </head>
   <body>
+    <div id="splashScreen" class="splash-screen" aria-hidden="true">
+      <img src="splash-screen.jpg" alt="" />
+    </div>
+
     <main class="app-shell">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">Balance mensual</p>
-          <h1 id="monthTitle">Mis gastos</h1>
+        <img class="brand-mark" src="icon-192.png" alt="Gastos" />
+        <div class="greeting">
+          <h1>Hola, Santiago</h1>
+          <p id="monthTitle">Asi van tus finanzas</p>
         </div>
-        <button class="icon-button" id="settingsBtn" aria-label="Ajustes" title="Ajustes">
-          <span aria-hidden="true">⚙</span>
-        </button>
+        <div class="header-actions">
+          <button class="icon-button" type="button" aria-label="Buscar" title="Buscar">⌕</button>
+          <button class="icon-button notify-dot" type="button" aria-label="Notificaciones" title="Notificaciones">◦</button>
+          <button class="icon-button" id="settingsBtn" type="button" aria-label="Ajustes" title="Ajustes">⚙</button>
+        </div>
       </header>
 
+      <nav class="top-tabs" aria-label="Vista">
+        <button class="active" type="button">Resumen</button>
+        <button type="button">Ingresos</button>
+        <button type="button">Egresos</button>
+      </nav>
+
       <section class="summary-panel" aria-label="Resumen del mes">
-        <div class="summary-grid">
-          <article>
+        <div class="hero-balance">
+          <div>
             <span>Disponible</span>
             <strong id="availableAmount">$0</strong>
-          </article>
-          <article>
-            <span>Ingresos</span>
-            <strong id="incomeAmount">$0</strong>
-          </article>
-          <article>
-            <span>Egresos</span>
-            <strong id="expenseAmount">$0</strong>
-          </article>
+          </div>
+          <img src="brand-logo.jpg" alt="" />
         </div>
-        <div class="budget-row">
-          <div>
-            <span>Presupuesto</span>
-            <strong id="budgetAmount">$0</strong>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <div id="budgetProgress"></div>
-          </div>
-          <span id="budgetStatus">0% usado</span>
+        <div class="summary-strip">
+          <article>
+            <span class="metric-icon income-bg">↑</span>
+            <small>Ingresos</small>
+            <strong id="incomeAmount">$0</strong>
+            <em>Este mes</em>
+          </article>
+          <article>
+            <span class="metric-icon expense-bg">↓</span>
+            <small>Egresos</small>
+            <strong id="expenseAmount">$0</strong>
+            <em>Este mes</em>
+          </article>
         </div>
       </section>
 
       <section class="quick-entry" aria-label="Registrar movimiento">
-        <div class="entry-tabs" role="tablist" aria-label="Tipo de movimiento">
-          <button class="active" id="expenseTab" type="button">Egreso</button>
-          <button id="incomeTab" type="button">Ingreso</button>
+        <div class="entry-heading">
+          <div>
+            <h2>Agregar movimiento</h2>
+            <p>Registra un ingreso o gasto</p>
+          </div>
+          <div class="entry-tabs" role="tablist" aria-label="Tipo de movimiento">
+            <button class="active" id="expenseTab" type="button">Egreso</button>
+            <button id="incomeTab" type="button">Ingreso</button>
+          </div>
         </div>
 
         <form id="transactionForm">
@@ -60,18 +76,20 @@
             <input id="amountInput" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" required />
           </label>
 
-          <label>
-            <span>Categoría</span>
-            <select id="categoryInput" required></select>
-          </label>
+          <div class="form-row">
+            <label>
+              <span>Categoria</span>
+              <select id="categoryInput" required></select>
+            </label>
+
+            <label>
+              <span>Fecha</span>
+              <input id="dateInput" type="date" required />
+            </label>
+          </div>
 
           <label>
-            <span>Fecha</span>
-            <input id="dateInput" type="date" required />
-          </label>
-
-          <label>
-            <span>Nota</span>
+            <span>Nota (opcional)</span>
             <input id="noteInput" type="text" maxlength="70" placeholder="Opcional" />
           </label>
 
@@ -84,9 +102,9 @@
         </form>
       </section>
 
-      <section class="analytics" aria-label="Análisis">
+      <section class="analytics" aria-label="Analisis">
         <div class="section-title">
-          <h2>Categorías</h2>
+          <h2>Categorias</h2>
           <select id="periodFilter" aria-label="Periodo">
             <option value="month">Este mes</option>
             <option value="all">Todo</option>
@@ -97,7 +115,7 @@
 
       <section class="transactions" aria-label="Historial">
         <div class="section-title">
-          <h2>Historial</h2>
+          <h2>Movimientos</h2>
           <button id="clearFiltersBtn" class="text-button" type="button">Limpiar</button>
         </div>
         <div class="filters">
@@ -106,10 +124,18 @@
             <option value="expense">Egresos</option>
             <option value="income">Ingresos</option>
           </select>
-          <select id="categoryFilter" aria-label="Filtrar por categoría"></select>
+          <select id="categoryFilter" aria-label="Filtrar por categoria"></select>
         </div>
         <div id="transactionList" class="transaction-list"></div>
       </section>
+
+      <nav class="bottom-nav" aria-label="Navegacion principal">
+        <button class="active" type="button"><span>⌂</span>Inicio</button>
+        <button type="button"><span>☷</span>Movimientos</button>
+        <button class="new-action" type="button"><span>+</span>Nuevo</button>
+        <button type="button"><span>◷</span>Resumen</button>
+        <button type="button"><span>⋯</span>Mas</button>
+      </nav>
     </main>
 
     <dialog id="settingsDialog">
@@ -118,10 +144,6 @@
           <h2>Ajustes</h2>
           <button class="icon-button" value="close" aria-label="Cerrar" title="Cerrar">×</button>
         </div>
-        <label>
-          <span>Presupuesto mensual</span>
-          <input id="budgetInput" type="number" inputmode="decimal" min="0" step="1000" />
-        </label>
         <label>
           <span>Moneda</span>
           <select id="currencyInput">
@@ -160,11 +182,11 @@
 
     <template id="emptyTemplate">
       <div class="empty-state">
-        <strong>Sin movimientos todavía</strong>
-        <span>Cargá el primero y el tablero empieza a tomar forma.</span>
+        <strong>Sin movimientos todavia</strong>
+        <span>Carga el primero y el tablero empieza a tomar forma.</span>
       </div>
     </template>
 
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=10"></script>
   </body>
 </html>
