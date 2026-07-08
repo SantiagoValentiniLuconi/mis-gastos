@@ -43,6 +43,7 @@ button {
   display: grid;
   place-items: center;
   background: #008d68;
+  pointer-events: auto;
   animation: splashOut 320ms ease 2s forwards;
 }
 
@@ -62,6 +63,7 @@ button {
   to {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
   }
 }
 
@@ -118,13 +120,9 @@ p {
   font-weight: 700;
 }
 
-.header-actions {
-  gap: 8px;
-}
-
 .icon-button {
-  width: 44px;
-  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.88);
@@ -132,22 +130,9 @@ p {
   display: grid;
   place-items: center;
   box-shadow: 0 10px 22px rgba(17, 24, 39, 0.07);
-  font-size: 1.18rem;
-}
-
-.notify-dot {
-  position: relative;
-}
-
-.notify-dot::after {
-  content: "";
-  position: absolute;
-  right: 9px;
-  top: 8px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--accent-2);
+  padding: 0 12px;
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .top-tabs {
@@ -554,7 +539,7 @@ select:focus {
   width: min(calc(100% - 24px), 516px);
   min-height: 76px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -568,10 +553,11 @@ select:focus {
   background: transparent;
   color: var(--muted);
   display: grid;
-  gap: 4px;
   place-items: center;
-  font-size: 0.72rem;
+  min-height: 64px;
+  font-size: 0.76rem;
   font-weight: 900;
+  padding: 0 4px;
 }
 
 .bottom-nav button span {
@@ -655,13 +641,9 @@ dialog::backdrop {
     font-size: 1.25rem;
   }
 
-  .header-actions {
-    gap: 6px;
-  }
-
   .icon-button {
-    width: 39px;
-    height: 39px;
+    min-width: 39px;
+    min-height: 39px;
     border-radius: 13px;
   }
 

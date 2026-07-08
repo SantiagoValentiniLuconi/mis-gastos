@@ -41,6 +41,9 @@ const els = {
   incomeAmount: $("incomeAmount"),
   expenseAmount: $("expenseAmount"),
   splashScreen: $("splashScreen"),
+  summaryTab: $("summaryTab"),
+  incomeViewTab: $("incomeViewTab"),
+  expenseViewTab: $("expenseViewTab"),
   expenseTab: $("expenseTab"),
   incomeTab: $("incomeTab"),
   form: $("transactionForm"),
@@ -62,6 +65,12 @@ const els = {
   backupSheetsBtn: $("backupSheetsBtn"),
   restoreSheetsBtn: $("restoreSheetsBtn"),
   syncStatus: $("syncStatus"),
+  homeNavBtn: $("homeNavBtn"),
+  movementsNavBtn: $("movementsNavBtn"),
+  newNavBtn: $("newNavBtn"),
+  moreNavBtn: $("moreNavBtn"),
+  newSection: $("newSection"),
+  movementsSection: $("movementsSection"),
   saveSettings: $("saveSettingsBtn"),
   exportBtn: $("exportBtn"),
   importInput: $("importInput"),
@@ -456,11 +465,28 @@ function registerServiceWorker() {
 function hideSplash() {
   window.setTimeout(() => {
     els.splashScreen?.classList.add("hidden");
+    if (els.splashScreen) els.splashScreen.style.display = "none";
   }, 2200);
+}
+
+function scrollToElement(element) {
+  element?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function setViewFilter(type) {
+  els.summaryTab.classList.toggle("active", type === "all");
+  els.incomeViewTab.classList.toggle("active", type === "income");
+  els.expenseViewTab.classList.toggle("active", type === "expense");
+  els.typeFilter.value = type;
+  renderTransactions();
+  if (type !== "all") scrollToElement(els.movementsSection);
 }
 
 els.expenseTab.addEventListener("click", () => setActiveType("expense"));
 els.incomeTab.addEventListener("click", () => setActiveType("income"));
+els.summaryTab.addEventListener("click", () => setViewFilter("all"));
+els.incomeViewTab.addEventListener("click", () => setViewFilter("income"));
+els.expenseViewTab.addEventListener("click", () => setViewFilter("expense"));
 els.form.addEventListener("submit", addTransaction);
 els.periodFilter.addEventListener("change", renderChart);
 els.typeFilter.addEventListener("change", renderTransactions);
@@ -475,6 +501,13 @@ els.clearFilters.addEventListener("click", () => {
   renderTransactions();
 });
 els.settingsBtn.addEventListener("click", openSettings);
+els.homeNavBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+els.movementsNavBtn.addEventListener("click", () => scrollToElement(els.movementsSection));
+els.newNavBtn.addEventListener("click", () => {
+  scrollToElement(els.newSection);
+  window.setTimeout(() => els.amount.focus(), 350);
+});
+els.moreNavBtn.addEventListener("click", openSettings);
 els.saveSettings.addEventListener("click", saveSettings);
 els.backupSheetsBtn.addEventListener("click", backupToSheets);
 els.restoreSheetsBtn.addEventListener("click", restoreFromSheets);

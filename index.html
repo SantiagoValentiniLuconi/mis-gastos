@@ -7,7 +7,7 @@
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=11" />
   </head>
   <body>
     <div id="splashScreen" class="splash-screen" aria-hidden="true">
@@ -21,17 +21,15 @@
           <h1>Hola, Santiago</h1>
           <p id="monthTitle">Asi van tus finanzas</p>
         </div>
-        <div class="header-actions">
-          <button class="icon-button" type="button" aria-label="Buscar" title="Buscar">⌕</button>
-          <button class="icon-button notify-dot" type="button" aria-label="Notificaciones" title="Notificaciones">◦</button>
-          <button class="icon-button" id="settingsBtn" type="button" aria-label="Ajustes" title="Ajustes">⚙</button>
-        </div>
+        <button class="icon-button settings-trigger" id="settingsBtn" type="button" aria-label="Ajustes" title="Ajustes">
+          Ajustes
+        </button>
       </header>
 
       <nav class="top-tabs" aria-label="Vista">
-        <button class="active" type="button">Resumen</button>
-        <button type="button">Ingresos</button>
-        <button type="button">Egresos</button>
+        <button class="active" id="summaryTab" type="button">Resumen</button>
+        <button id="incomeViewTab" type="button">Ingresos</button>
+        <button id="expenseViewTab" type="button">Egresos</button>
       </nav>
 
       <section class="summary-panel" aria-label="Resumen del mes">
@@ -44,13 +42,13 @@
         </div>
         <div class="summary-strip">
           <article>
-            <span class="metric-icon income-bg">↑</span>
+            <span class="metric-icon income-bg">+</span>
             <small>Ingresos</small>
             <strong id="incomeAmount">$0</strong>
             <em>Este mes</em>
           </article>
           <article>
-            <span class="metric-icon expense-bg">↓</span>
+            <span class="metric-icon expense-bg">-</span>
             <small>Egresos</small>
             <strong id="expenseAmount">$0</strong>
             <em>Este mes</em>
@@ -58,7 +56,7 @@
         </div>
       </section>
 
-      <section class="quick-entry" aria-label="Registrar movimiento">
+      <section class="quick-entry" id="newSection" aria-label="Registrar movimiento">
         <div class="entry-heading">
           <div>
             <h2>Agregar movimiento</h2>
@@ -113,7 +111,7 @@
         <div id="categoryChart" class="category-chart"></div>
       </section>
 
-      <section class="transactions" aria-label="Historial">
+      <section class="transactions" id="movementsSection" aria-label="Historial">
         <div class="section-title">
           <h2>Movimientos</h2>
           <button id="clearFiltersBtn" class="text-button" type="button">Limpiar</button>
@@ -130,11 +128,10 @@
       </section>
 
       <nav class="bottom-nav" aria-label="Navegacion principal">
-        <button class="active" type="button"><span>⌂</span>Inicio</button>
-        <button type="button"><span>☷</span>Movimientos</button>
-        <button class="new-action" type="button"><span>+</span>Nuevo</button>
-        <button type="button"><span>◷</span>Resumen</button>
-        <button type="button"><span>⋯</span>Mas</button>
+        <button class="active" id="homeNavBtn" type="button">Inicio</button>
+        <button id="movementsNavBtn" type="button">Movimientos</button>
+        <button class="new-action" id="newNavBtn" type="button"><span>+</span>Nuevo</button>
+        <button id="moreNavBtn" type="button">Mas</button>
       </nav>
     </main>
 
@@ -142,7 +139,7 @@
       <form method="dialog" class="settings-card">
         <div class="section-title">
           <h2>Ajustes</h2>
-          <button class="icon-button" value="close" aria-label="Cerrar" title="Cerrar">×</button>
+          <button class="icon-button" value="close" aria-label="Cerrar" title="Cerrar">Cerrar</button>
         </div>
         <label>
           <span>Moneda</span>
@@ -187,6 +184,6 @@
       </div>
     </template>
 
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
   </body>
 </html>
