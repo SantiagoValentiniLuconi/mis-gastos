@@ -7,7 +7,7 @@
     <title>Gastos</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=15" />
+    <link rel="stylesheet" href="styles.css?v=16" />
   </head>
   <body>
     <div id="splashScreen" class="splash-screen" aria-hidden="true">
@@ -73,6 +73,21 @@
             <span>Monto</span>
             <input id="amountInput" type="text" inputmode="numeric" pattern="[0-9.,]*" autocomplete="off" placeholder="0" required />
           </label>
+
+          <div class="amount-keypad" aria-label="Teclado de monto">
+            <button type="button" data-keypad="1">1</button>
+            <button type="button" data-keypad="2">2</button>
+            <button type="button" data-keypad="3">3</button>
+            <button type="button" data-keypad="4">4</button>
+            <button type="button" data-keypad="5">5</button>
+            <button type="button" data-keypad="6">6</button>
+            <button type="button" data-keypad="7">7</button>
+            <button type="button" data-keypad="8">8</button>
+            <button type="button" data-keypad="9">9</button>
+            <button type="button" data-keypad="clear">Borrar</button>
+            <button type="button" data-keypad="0">0</button>
+            <button type="button" data-keypad="back">⌫</button>
+          </div>
 
           <div class="form-row">
             <label>
@@ -220,6 +235,6 @@
       </div>
     </template>
 
-    <script src="app.js?v=15"></script>
+    <script src="app.js?v=16"></script>
   </body>
 </html>

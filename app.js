@@ -48,6 +48,7 @@ const els = {
   incomeTab: $("incomeTab"),
   form: $("transactionForm"),
   amount: $("amountInput"),
+  amountKeypad: document.querySelector(".amount-keypad"),
   category: $("categoryInput"),
   date: $("dateInput"),
   note: $("noteInput"),
@@ -128,6 +129,38 @@ function formatAmountField() {
   const position = els.amount.selectionStart || nextLength;
   const nextPosition = Math.max(0, position + (nextLength - previousLength));
   els.amount.setSelectionRange(nextPosition, nextPosition);
+}
+
+function setAmountFromDigits(digits) {
+  const clean = digits.replace(/\D/g, "");
+  els.amount.value = clean ? new Intl.NumberFormat("es-AR").format(Number(clean)) : "";
+}
+
+function currentAmountDigits() {
+  return els.amount.value.replace(/\D/g, "");
+}
+
+function handleAmountKeypad(event) {
+  const button = event.target.closest("[data-keypad]");
+  if (!button) return;
+
+  const action = button.dataset.keypad;
+  let digits = currentAmountDigits();
+
+  if (action === "clear") {
+    setAmountFromDigits("");
+    return;
+  }
+
+  if (action === "back") {
+    setAmountFromDigits(digits.slice(0, -1));
+    return;
+  }
+
+  if (/^\d$/.test(action)) {
+    if (digits.length >= 12) return;
+    setAmountFromDigits(`${digits}${action}`);
+  }
 }
 
 function todayISO() {
@@ -543,6 +576,7 @@ els.expenseTab.addEventListener("click", () => setActiveType("expense"));
 els.incomeTab.addEventListener("click", () => setActiveType("income"));
 els.amount.addEventListener("input", formatAmountField);
 els.amount.addEventListener("focus", () => els.amount.select());
+els.amountKeypad.addEventListener("click", handleAmountKeypad);
 els.summaryTab.addEventListener("click", () => setViewFilter("all"));
 els.incomeViewTab.addEventListener("click", () => setViewFilter("income"));
 els.expenseViewTab.addEventListener("click", () => setViewFilter("expense"));

@@ -373,6 +373,27 @@ select:focus {
   font-weight: 800;
 }
 
+.amount-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.amount-keypad button {
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8fbfa;
+  color: var(--ink);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.amount-keypad button:active {
+  background: var(--soft-green);
+  color: var(--accent);
+}
+
 .check-row {
   grid-template-columns: 24px 1fr;
   align-items: center;
